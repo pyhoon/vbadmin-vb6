@@ -116,11 +116,25 @@ Begin VB.Form frmTemplate
       TabIndex        =   12
       Top             =   1080
       Width           =   3000
-      Begin VB.Image img4 
-         Height          =   840
+      Begin VB.Label fa4 
+         AutoSize        =   -1  'True
+         BackStyle       =   0  'Transparent
+         Caption         =   "sync-alt"
+         BeginProperty Font 
+            Name            =   "Font Awesome 5 Free Solid"
+            Size            =   36
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         ForeColor       =   &H00E0E0E0&
+         Height          =   750
          Left            =   240
+         TabIndex        =   26
          Top             =   240
-         Width           =   840
+         Width           =   720
       End
       Begin VB.Label Label3 
          Alignment       =   1  'Right Justify
@@ -128,7 +142,7 @@ Begin VB.Form frmTemplate
          AutoSize        =   -1  'True
          BackColor       =   &H80000005&
          BackStyle       =   0  'Transparent
-         Caption         =   "99 Errors"
+         Caption         =   "99 Updates"
          BeginProperty Font 
             Name            =   "Arial"
             Size            =   18
@@ -140,10 +154,10 @@ Begin VB.Form frmTemplate
          EndProperty
          ForeColor       =   &H00E0E0E0&
          Height          =   405
-         Left            =   1275
+         Left            =   900
          TabIndex        =   16
          Top             =   1440
-         Width           =   1470
+         Width           =   1845
       End
    End
    Begin VB.Frame fraBox3 
@@ -155,11 +169,25 @@ Begin VB.Form frmTemplate
       TabIndex        =   11
       Top             =   1080
       Width           =   3000
-      Begin VB.Image img3 
-         Height          =   840
+      Begin VB.Label fa3 
+         AutoSize        =   -1  'True
+         BackStyle       =   0  'Transparent
+         Caption         =   "database"
+         BeginProperty Font 
+            Name            =   "Font Awesome 5 Free Solid"
+            Size            =   36
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         ForeColor       =   &H00E0E0E0&
+         Height          =   750
          Left            =   240
+         TabIndex        =   25
          Top             =   240
-         Width           =   840
+         Width           =   630
       End
       Begin VB.Label Label2 
          Alignment       =   1  'Right Justify
@@ -167,7 +195,7 @@ Begin VB.Form frmTemplate
          AutoSize        =   -1  'True
          BackColor       =   &H80000005&
          BackStyle       =   0  'Transparent
-         Caption         =   "99,999 Files"
+         Caption         =   "99,999 Records"
          BeginProperty Font 
             Name            =   "Arial"
             Size            =   18
@@ -179,10 +207,10 @@ Begin VB.Form frmTemplate
          EndProperty
          ForeColor       =   &H00E0E0E0&
          Height          =   405
-         Left            =   750
+         Left            =   180
          TabIndex        =   15
          Top             =   1440
-         Width           =   1950
+         Width           =   2520
       End
    End
    Begin VB.Frame fraBox2 
@@ -194,11 +222,25 @@ Begin VB.Form frmTemplate
       TabIndex        =   10
       Top             =   1080
       Width           =   3000
-      Begin VB.Image img2 
-         Height          =   840
+      Begin VB.Label fa2 
+         AutoSize        =   -1  'True
+         BackStyle       =   0  'Transparent
+         Caption         =   "users"
+         BeginProperty Font 
+            Name            =   "Font Awesome 5 Free Solid"
+            Size            =   36
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         ForeColor       =   &H00E0E0E0&
+         Height          =   750
          Left            =   240
+         TabIndex        =   24
          Top             =   240
-         Width           =   840
+         Width           =   900
       End
       Begin VB.Label Label1 
          Alignment       =   1  'Right Justify
@@ -233,11 +275,25 @@ Begin VB.Form frmTemplate
       TabIndex        =   9
       Top             =   1080
       Width           =   3000
-      Begin VB.Image img1 
-         Height          =   840
+      Begin VB.Label fa1 
+         AutoSize        =   -1  'True
+         BackStyle       =   0  'Transparent
+         Caption         =   "tachometer-alt"
+         BeginProperty Font 
+            Name            =   "Font Awesome 5 Free Solid"
+            Size            =   36
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         ForeColor       =   &H00E0E0E0&
+         Height          =   750
          Left            =   240
+         TabIndex        =   23
          Top             =   240
-         Width           =   840
+         Width           =   810
       End
       Begin VB.Label lblBox1 
          Alignment       =   1  'Right Justify
@@ -362,15 +418,27 @@ Begin VB.Form frmTemplate
       TabIndex        =   0
       Top             =   0
       Width           =   17295
-      Begin VB.Image Avatar 
-         Height          =   495
-         Left            =   14160
-         Stretch         =   -1  'True
-         Top             =   120
-         Width           =   495
+      Begin VB.Label lblUserIcon 
+         AutoSize        =   -1  'True
+         BackStyle       =   0  'Transparent
+         Caption         =   "user"
+         BeginProperty Font 
+            Name            =   "Font Awesome 5 Free Regular"
+            Size            =   15.75
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         ForeColor       =   &H00FFFFFF&
+         Height          =   315
+         Left            =   14400
+         TabIndex        =   27
+         Top             =   180
+         Width           =   315
       End
       Begin VB.Label lblUserName 
-         Alignment       =   1  'Right Justify
          Appearance      =   0  'Flat
          AutoSize        =   -1  'True
          BackColor       =   &H80000005&
@@ -465,19 +533,10 @@ End Sub
 Private Sub Form_Load()
     Me.Caption = "ADMIN DASHBOARD"
     lblTitle.Caption = Me.Caption
-    LoadIcons
+    'lblUserName.Caption = gstrUserName
     LoadMousePointer
     SetBoxColour
     SetContainerTitle
-End Sub
-
-Private Sub LoadIcons()
-On Error Resume Next
-    Avatar.Picture = LoadPicture(App.Path & "\Resources\Icon\admin.ico")
-    img1.Picture = LoadPicture(App.Path & "\Resources\Icon\icon1.bmp")
-    img2.Picture = LoadPicture(App.Path & "\Resources\Icon\icon2.bmp")
-    img3.Picture = LoadPicture(App.Path & "\Resources\Icon\icon3.bmp")
-    img4.Picture = LoadPicture(App.Path & "\Resources\Icon\icon4.bmp")
 End Sub
 
 Private Sub LoadMousePointer()
