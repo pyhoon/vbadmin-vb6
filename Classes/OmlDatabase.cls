@@ -1,30 +1,11 @@
-VERSION 1.0 CLASS
-BEGIN
-  MultiUse = -1  'True
-  Persistable = 0  'NotPersistable
-  DataBindingBehavior = 0  'vbNone
-  DataSourceBehavior  = 0  'vbNone
-  MTSTransactionMode  = 0  'NotAnMTSObject
-END
-Attribute VB_Name = "OmlDatabase"
-Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
-Attribute VB_PredeclaredId = False
-Attribute VB_Exposed = False
-Attribute VB_Ext_KEY = "SavedWithClassBuilder6" ,"Yes"
-Attribute VB_Ext_KEY = "Top_Level" ,"Yes"
-Option Explicit
 '**************************************************************************
 '   Library Name: Omelette Database Class (OmlDatabase)
 '**************************************************************************
-' Version: 0.0.0.1
+' Version: 1.0.0.0
 ' Created on: 01 Feb 2018
-' Updated on:
+' Updated on: 08 Feb 2018
 ' Created by: Aeric Poon Yip Hoon
 ' Description: A high level API written for MS Visual Basic 6.0
-' Company Name: Computerise System Solutions
-' Copyright: (c) 2015-2018 Computerise System Solutions, All rights reserved.
-' Company Website: http://computerise.my
 '**************************************************************************
 '
 '**************************************************************************
@@ -44,6 +25,7 @@ Option Explicit
 '**************************************************************************
 '   Global Constants
 '**************************************************************************
+Option Explicit
 Private mstrErrorDesc As String
 Private mstrConnectionString As String
 Private mstrProvider As String
@@ -164,7 +146,7 @@ Catch:
     ErrorDesc = Err.Description
     On Error Resume Next
     mconADODB.RollbackTrans
-    ErrorDesc = Err.Description & " " & strSQL
+    ErrorDesc = ErrorDesc & " " & strSQL
 End Sub
 
 Public Function OpenRs(ByVal strSQL As String) As ADODB.Recordset
