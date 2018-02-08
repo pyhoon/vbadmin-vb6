@@ -164,15 +164,27 @@ Begin VB.Form frmHelp
       TabIndex        =   0
       Top             =   0
       Width           =   17295
-      Begin VB.Image Avatar 
-         Height          =   495
-         Left            =   14160
-         Stretch         =   -1  'True
-         Top             =   120
-         Width           =   495
+      Begin VB.Label lblUserIcon 
+         AutoSize        =   -1  'True
+         BackStyle       =   0  'Transparent
+         Caption         =   "user"
+         BeginProperty Font 
+            Name            =   "Font Awesome 5 Free Regular"
+            Size            =   15.75
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         ForeColor       =   &H00FFFFFF&
+         Height          =   315
+         Left            =   14400
+         TabIndex        =   12
+         Top             =   180
+         Width           =   315
       End
       Begin VB.Label lblUserName 
-         Alignment       =   1  'Right Justify
          Appearance      =   0  'Flat
          AutoSize        =   -1  'True
          BackColor       =   &H80000005&
@@ -267,14 +279,9 @@ End Sub
 Private Sub Form_Load()
     Me.Caption = "HELP"
     lblTitle.Caption = Me.Caption
-    LoadIcons
+    lblUserName.Caption = gstrUserName
     LoadMousePointer
     SetContainerTitle
-End Sub
-
-Private Sub LoadIcons()
-On Error Resume Next
-    Avatar.Picture = LoadPicture(App.Path & "\Resources\Icon\admin.ico")
 End Sub
 
 Private Sub LoadMousePointer()
