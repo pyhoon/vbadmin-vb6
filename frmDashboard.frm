@@ -148,11 +148,25 @@ Begin VB.Form frmDashboard
       TabIndex        =   12
       Top             =   1080
       Width           =   3000
-      Begin VB.Image img4 
-         Height          =   840
+      Begin VB.Label fa4 
+         AutoSize        =   -1  'True
+         BackStyle       =   0  'Transparent
+         Caption         =   "sync-alt"
+         BeginProperty Font 
+            Name            =   "Font Awesome 5 Free Solid"
+            Size            =   36
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         ForeColor       =   &H00E0E0E0&
+         Height          =   750
          Left            =   240
+         TabIndex        =   28
          Top             =   240
-         Width           =   840
+         Width           =   720
       End
       Begin VB.Label Label3 
          Alignment       =   1  'Right Justify
@@ -160,7 +174,7 @@ Begin VB.Form frmDashboard
          AutoSize        =   -1  'True
          BackColor       =   &H80000005&
          BackStyle       =   0  'Transparent
-         Caption         =   "99 Errors"
+         Caption         =   "99 Updates"
          BeginProperty Font 
             Name            =   "Arial"
             Size            =   18
@@ -172,10 +186,10 @@ Begin VB.Form frmDashboard
          EndProperty
          ForeColor       =   &H00E0E0E0&
          Height          =   405
-         Left            =   1275
+         Left            =   900
          TabIndex        =   16
          Top             =   1440
-         Width           =   1470
+         Width           =   1845
       End
    End
    Begin VB.Frame fraBox3 
@@ -187,11 +201,25 @@ Begin VB.Form frmDashboard
       TabIndex        =   11
       Top             =   1080
       Width           =   3000
-      Begin VB.Image img3 
-         Height          =   840
+      Begin VB.Label fa3 
+         AutoSize        =   -1  'True
+         BackStyle       =   0  'Transparent
+         Caption         =   "database"
+         BeginProperty Font 
+            Name            =   "Font Awesome 5 Free Solid"
+            Size            =   36
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         ForeColor       =   &H00E0E0E0&
+         Height          =   750
          Left            =   240
+         TabIndex        =   27
          Top             =   240
-         Width           =   840
+         Width           =   630
       End
       Begin VB.Label Label2 
          Alignment       =   1  'Right Justify
@@ -199,7 +227,7 @@ Begin VB.Form frmDashboard
          AutoSize        =   -1  'True
          BackColor       =   &H80000005&
          BackStyle       =   0  'Transparent
-         Caption         =   "99,999 Files"
+         Caption         =   "99,999 Records"
          BeginProperty Font 
             Name            =   "Arial"
             Size            =   18
@@ -211,10 +239,10 @@ Begin VB.Form frmDashboard
          EndProperty
          ForeColor       =   &H00E0E0E0&
          Height          =   405
-         Left            =   750
+         Left            =   180
          TabIndex        =   15
          Top             =   1440
-         Width           =   1950
+         Width           =   2520
       End
    End
    Begin VB.Frame fraBox2 
@@ -226,11 +254,25 @@ Begin VB.Form frmDashboard
       TabIndex        =   10
       Top             =   1080
       Width           =   3000
-      Begin VB.Image img2 
-         Height          =   840
+      Begin VB.Label fa2 
+         AutoSize        =   -1  'True
+         BackStyle       =   0  'Transparent
+         Caption         =   "users"
+         BeginProperty Font 
+            Name            =   "Font Awesome 5 Free Solid"
+            Size            =   36
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         ForeColor       =   &H00E0E0E0&
+         Height          =   750
          Left            =   240
+         TabIndex        =   26
          Top             =   240
-         Width           =   840
+         Width           =   900
       End
       Begin VB.Label Label1 
          Alignment       =   1  'Right Justify
@@ -265,11 +307,25 @@ Begin VB.Form frmDashboard
       TabIndex        =   9
       Top             =   1080
       Width           =   3000
-      Begin VB.Image img1 
-         Height          =   840
+      Begin VB.Label fa1 
+         AutoSize        =   -1  'True
+         BackStyle       =   0  'Transparent
+         Caption         =   "tachometer-alt"
+         BeginProperty Font 
+            Name            =   "Font Awesome 5 Free Solid"
+            Size            =   36
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         ForeColor       =   &H00E0E0E0&
+         Height          =   750
          Left            =   240
+         TabIndex        =   25
          Top             =   240
-         Width           =   840
+         Width           =   810
       End
       Begin VB.Label lblBox1 
          Alignment       =   1  'Right Justify
@@ -394,15 +450,27 @@ Begin VB.Form frmDashboard
       TabIndex        =   0
       Top             =   0
       Width           =   17295
-      Begin VB.Image Avatar 
-         Height          =   495
-         Left            =   14160
-         Stretch         =   -1  'True
-         Top             =   120
-         Width           =   495
+      Begin VB.Label lblUserIcon 
+         AutoSize        =   -1  'True
+         BackStyle       =   0  'Transparent
+         Caption         =   "user"
+         BeginProperty Font 
+            Name            =   "Font Awesome 5 Free Regular"
+            Size            =   15.75
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         ForeColor       =   &H00FFFFFF&
+         Height          =   315
+         Left            =   14400
+         TabIndex        =   29
+         Top             =   180
+         Width           =   315
       End
       Begin VB.Label lblUserName 
-         Alignment       =   1  'Right Justify
          Appearance      =   0  'Flat
          AutoSize        =   -1  'True
          BackColor       =   &H80000005&
@@ -439,7 +507,7 @@ Begin VB.Form frmDashboard
             Italic          =   0   'False
             Strikethrough   =   0   'False
          EndProperty
-         ForeColor       =   &H00FFFFFF&
+         ForeColor       =   &H00000000&
          Height          =   615
          Left            =   16680
          TabIndex        =   2
@@ -447,8 +515,8 @@ Begin VB.Form frmDashboard
          Width           =   615
       End
       Begin VB.Shape shpX 
-         BorderColor     =   &H000000FF&
-         FillColor       =   &H000000FF&
+         BorderColor     =   &H8000000D&
+         FillColor       =   &H8000000D&
          FillStyle       =   0  'Solid
          Height          =   615
          Left            =   16680
@@ -501,20 +569,10 @@ End Sub
 Private Sub Form_Load()
     Me.Caption = "ADMIN DASHBOARD"
     lblTitle.Caption = Me.Caption
-    LoadIcons
+    lblUserName.Caption = gstrUserName
     LoadMousePointer
     SetBoxColour
     SetContainerTitle
-'    TestData
-End Sub
-
-Private Sub LoadIcons()
-On Error Resume Next
-    Avatar.Picture = LoadPicture(App.Path & "\Resources\Icon\admin.ico")
-    img1.Picture = LoadPicture(App.Path & "\Resources\Icon\icon1.bmp")
-    img2.Picture = LoadPicture(App.Path & "\Resources\Icon\icon2.bmp")
-    img3.Picture = LoadPicture(App.Path & "\Resources\Icon\icon3.bmp")
-    img4.Picture = LoadPicture(App.Path & "\Resources\Icon\icon4.bmp")
 End Sub
 
 Private Sub LoadMousePointer()
@@ -534,36 +592,6 @@ Private Sub SetContainerTitle()
     lblContainerTitle1.Caption = "CRUD FUNCTIONS"
     lblContainerTitle2.Caption = "HELP"
     lblButton2.Caption = "HELP"
-End Sub
-
-Private Sub TestData()
-    Dim con As ADODB.Connection
-    Dim rst As ADODB.Recordset
-    
-    strAppDataPath = App.Path & "\Storage\"
-    strAppDataFile = "Data.mdb"
-    With DB
-        .DataPath = strAppDataPath
-        .DataFile = strAppDataFile
-        '.DataPassword = ""
-        .OpenMdb
-        '.Connection = con
-        If .ErrorDesc <> "" Then
-            MsgBox "Error: " & .ErrorDesc, vbExclamation, "Failed"
-            Exit Sub
-        End If
-        'MsgBox "Database open", vbExclamation, "Success"
-        Dim strSQL As String
-        strSQL = "SELECT Name FROM Users WHERE ID = 1"
-        Set rst = .OpenRs(strSQL)
-        If .ErrorDesc <> "" Then
-            MsgBox "Error: " & .ErrorDesc, vbExclamation, "Failed"
-            Exit Sub
-        End If
-        MsgBox "Name: " & rst!Name, vbInformation, "Recordset"
-        .CloseRs rst
-        .CloseMdb
-    End With
 End Sub
 
 Private Sub Form_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
@@ -644,7 +672,7 @@ Private Sub fraContainerTitle2_MouseMove(Button As Integer, Shift As Integer, X 
 End Sub
 
 Private Sub fraMenu1_Click()
-    MsgBox "" & lblMenu1.Caption, vbInformation, "Click"
+    'MsgBox "" & lblMenu1.Caption, vbInformation, "Click"
 End Sub
 
 Private Sub fraMenu2_Click()
@@ -720,8 +748,18 @@ Private Sub SetMouseMove(Button As Integer, X As Single, Y As Single)
         Me.Left = Me.Left + MoveEndX
         Me.Top = Me.Top + MoveEndY
     End If
+    shpX.FillColor = &H8000000D
+    shpX.BorderColor = &H8000000D
+    'lblX.ForeColor = &H8000000D
+    lblX.ForeColor = &H0&
 End Sub
 
 Private Sub lblX_Click()
     Unload Me
+    frmLogin.Show
+End Sub
+
+Private Sub lblX_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
+    lblX.ForeColor = vbWhite
+    shpX.FillColor = vbRed
 End Sub
