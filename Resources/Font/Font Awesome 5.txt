@@ -1,0 +1,9 @@
+Downloaded from: https://fontawesome.com/get-started/desktop
+
+Copied from folder: use-on-desktop
+
+Font used: Font Awesome 5 Free Solid
+
+For the label caption, refer to: https://fontawesome.com/cheatsheet
+
+Example: tachometer-alt
