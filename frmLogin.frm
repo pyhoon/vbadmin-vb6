@@ -23,14 +23,6 @@ Begin VB.Form frmLogin
    ScaleHeight     =   7110
    ScaleWidth      =   13365
    StartUpPosition =   1  'CenterOwner
-   Begin VB.CommandButton cmdUpdateSalt 
-      Caption         =   "UPDATE SALT"
-      Height          =   735
-      Left            =   720
-      TabIndex        =   12
-      Top             =   2880
-      Width           =   1935
-   End
    Begin VB.Frame fraContainer1 
       Appearance      =   0  'Flat
       BackColor       =   &H80000005&
@@ -41,14 +33,6 @@ Begin VB.Form frmLogin
       TabIndex        =   6
       Top             =   1080
       Width           =   12615
-      Begin VB.CommandButton cmdUpdatePassword 
-         Caption         =   "UPDATE PASSWORD"
-         Height          =   735
-         Left            =   360
-         TabIndex        =   13
-         Top             =   3120
-         Width           =   1935
-      End
       Begin VB.Frame fraButton1 
          Appearance      =   0  'Flat
          BackColor       =   &H00B7D736&
@@ -225,7 +209,7 @@ Begin VB.Form frmLogin
          EndProperty
          ForeColor       =   &H00FFFFFF&
          Height          =   615
-         Left            =   12730
+         Left            =   12750
          TabIndex        =   5
          Top             =   0
          Width           =   615
@@ -277,16 +261,6 @@ Dim MoveStartY As Single
 Dim MoveEndX As Single
 Dim MoveEndY As Single
 
-Private Sub cmdUpdatePassword_Click()
-'    UpdatePassword "Aeric", "aeric"
-'    UpdatePassword "Demo", "Demo"
-End Sub
-
-Private Sub cmdUpdateSalt_Click()
-'    UpdateSalt "Aeric", "Password"
-'    UpdateSalt "Demo", "Demo"
-End Sub
-
 Private Sub Form_Initialize()
     ' Source: http://www.vbforums.com/showthread.php?432036-Classic-VB-How-can-I-set-my-exe-icon-using-a-resource-file
     Me.Icon = LoadResPicture("APPICON", vbResIcon)
@@ -313,14 +287,6 @@ Private Sub SetContainerTitle()
     lblContainerTitle1.Caption = "PLEASE ENTER YOUR LOGIN CREDENTIALS"
 End Sub
 
-Private Sub Form_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    GetMouseMove Button, X, Y
-End Sub
-
-Private Sub Form_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    SetMouseMove Button, X, Y
-End Sub
-
 Private Sub Form_Unload(Cancel As Integer)
     'frmDashboard.Show
 End Sub
@@ -334,20 +300,13 @@ Private Sub fraButton1_MouseMove(Button As Integer, Shift As Integer, X As Singl
     End With
 End Sub
 
-Private Sub fraContainer1_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    GetMouseMove Button, X, Y
-End Sub
-
 Private Sub fraContainer1_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    SetMouseMove Button, X, Y
-End Sub
-
-Private Sub fraContainerTitle1_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    GetMouseMove Button, X, Y
-End Sub
-
-Private Sub fraContainerTitle1_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    SetMouseMove Button, X, Y
+    With fraButton1
+        .BackColor = &HB7D736
+    End With
+    With lblButton1
+        .ForeColor = &HFFFFFF
+    End With
 End Sub
 
 Private Sub fraTitle_Click()
@@ -382,14 +341,6 @@ Private Sub lblButton1_Click()
     End If
 End Sub
 
-Private Sub lblContainerTitle1_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    GetMouseMove Button, X, Y
-End Sub
-
-Private Sub lblContainerTitle1_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    SetMouseMove Button, X, Y
-End Sub
-
 Private Sub lblTitle_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
     GetMouseMove Button, X, Y
 End Sub
@@ -410,12 +361,6 @@ Private Sub SetMouseMove(Button As Integer, X As Single, Y As Single)
         Me.Left = Me.Left + MoveEndX
         Me.Top = Me.Top + MoveEndY
     End If
-    With fraButton1
-        .BackColor = &HB7D736
-    End With
-    With lblButton1
-        .ForeColor = &HFFFFFF
-    End With
 End Sub
 
 Private Sub lblX_Click()
@@ -524,69 +469,4 @@ Private Function GetSalt(ByVal strUserID As String) As String
         .CloseRs rst
         .CloseMdb
     End With
-End Function
-
-Private Sub UpdateSalt(ByVal strUserID As String, ByVal strSalt As String)
-    Dim con As ADODB.Connection
-    Dim strSQL As String
-    
-    strAppDataPath = App.Path & "\Storage\"
-    strAppDataFile = "Data.mdb"
-    With DB
-        .DataPath = strAppDataPath
-        .DataFile = strAppDataFile
-        '.DataPassword = ""
-        .OpenMdb
-        If .ErrorDesc <> "" Then
-            MsgBox "Error: " & .ErrorDesc, vbExclamation, "Open Database"
-            Exit Sub
-        End If
-        
-        strSQL = "UPDATE Users SET"
-        strSQL = strSQL & " Salt = '" & GenerateSalt(strSalt) & "'"
-        strSQL = strSQL & " WHERE UserID = '" & strUserID & "'"
-        .Execute strSQL
-        If .ErrorDesc <> "" Then
-            MsgBox "Error: " & .ErrorDesc, vbExclamation, "Update Database"
-            Exit Sub
-        End If
-        MsgBox "Salt updated", vbInformation, "UpdateSalt"
-        .CloseMdb
-    End With
-End Sub
-
-Private Sub UpdatePassword(ByVal strUserID As String, ByVal strPassword As String)
-    Dim con As ADODB.Connection
-    Dim strSQL As String
-    Dim strSalt As String
-    
-    strAppDataPath = App.Path & "\Storage\"
-    strAppDataFile = "Data.mdb"
-    
-    strSalt = GetSalt(strUserID)
-    
-    With DB
-        .DataPath = strAppDataPath
-        .DataFile = strAppDataFile
-        '.DataPassword = ""
-        .OpenMdb
-        If .ErrorDesc <> "" Then
-            MsgBox "Error: " & .ErrorDesc, vbExclamation, "Open Database"
-            Exit Sub
-        End If
-        strSQL = "UPDATE Users SET"
-        strSQL = strSQL & " UserPassword = '" & MD5(strPassword & strSalt) & "'"
-        strSQL = strSQL & " WHERE UserID = '" & strUserID & "'"
-        .Execute strSQL
-        If .ErrorDesc <> "" Then
-            MsgBox "Error: " & .ErrorDesc, vbExclamation, "Update Database"
-            Exit Sub
-        End If
-        MsgBox "Password updated", vbInformation, "UpdatePassword"
-        .CloseMdb
-    End With
-End Sub
-
-Private Function GenerateSalt(ByVal strPlain As String) As String
-    GenerateSalt = MD5(strPlain)
 End Function
