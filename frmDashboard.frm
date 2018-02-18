@@ -594,99 +594,17 @@ Private Sub SetContainerTitle()
     lblButton2.Caption = "HELP"
 End Sub
 
-Private Sub Form_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    GetMouseMove Button, X, Y
-End Sub
-
-Private Sub Form_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    SetMouseMove Button, X, Y
-End Sub
-
-Private Sub fraBox1_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    GetMouseMove Button, X, Y
-End Sub
-
-Private Sub fraBox1_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    SetMouseMove Button, X, Y
-End Sub
-
-Private Sub fraBox2_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    GetMouseMove Button, X, Y
-End Sub
-
-Private Sub fraBox2_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    SetMouseMove Button, X, Y
-End Sub
-
-Private Sub fraBox3_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    GetMouseMove Button, X, Y
-End Sub
-
-Private Sub fraBox3_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    SetMouseMove Button, X, Y
-End Sub
-
-Private Sub fraBox4_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    GetMouseMove Button, X, Y
-End Sub
-
-Private Sub fraBox4_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    SetMouseMove Button, X, Y
-End Sub
-
 Private Sub fraButton2_Click()
     Me.Hide
     frmHelp.Show
 End Sub
 
-Private Sub fraContainer1_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    GetMouseMove Button, X, Y
-End Sub
-
-Private Sub fraContainer1_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    SetMouseMove Button, X, Y
-End Sub
-
-Private Sub fraContainer2_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    GetMouseMove Button, X, Y
-End Sub
-
-Private Sub fraContainer2_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    SetMouseMove Button, X, Y
-End Sub
-
-Private Sub fraContainerTitle1_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    GetMouseMove Button, X, Y
-End Sub
-
-Private Sub fraContainerTitle1_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    SetMouseMove Button, X, Y
-End Sub
-
-Private Sub fraContainerTitle2_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    GetMouseMove Button, X, Y
-End Sub
-
-Private Sub fraContainerTitle2_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    SetMouseMove Button, X, Y
-End Sub
-
-Private Sub fraMenu1_Click()
-    'MsgBox "" & lblMenu1.Caption, vbInformation, "Click"
-End Sub
-
 Private Sub fraMenu2_Click()
-    'MsgBox "" & lblMenu2.Caption, vbInformation, "Click"
     Me.Hide
     frmUsers.Show
 End Sub
 
-Private Sub fraMenuContainer_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    GetMouseMove Button, X, Y
-End Sub
-
 Private Sub fraMenuContainer_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    SetMouseMove Button, X, Y
     fraMenu1.BackColor = &H80000010
     fraMenu2.BackColor = &H80000010
 End Sub
@@ -710,22 +628,6 @@ End Sub
 Private Sub lblButton2_Click()
     Me.Hide
     frmHelp.Show
-End Sub
-
-Private Sub lblContainerTitle1_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    GetMouseMove Button, X, Y
-End Sub
-
-Private Sub lblContainerTitle1_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    SetMouseMove Button, X, Y
-End Sub
-
-Private Sub lblContainerTitle2_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    GetMouseMove Button, X, Y
-End Sub
-
-Private Sub lblContainerTitle2_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    SetMouseMove Button, X, Y
 End Sub
 
 Private Sub lblTitle_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
