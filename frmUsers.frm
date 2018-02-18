@@ -40,11 +40,11 @@ Begin VB.Form frmUsers
          BorderStyle     =   0  'None
          ForeColor       =   &H80000008&
          Height          =   735
-         Left            =   9000
+         Left            =   9840
          MousePointer    =   99  'Custom
-         TabIndex        =   12
-         Top             =   6480
-         Width           =   3495
+         TabIndex        =   14
+         Top             =   6360
+         Width           =   2775
          Begin VB.Label lblButton1 
             Alignment       =   2  'Center
             AutoSize        =   -1  'True
@@ -62,9 +62,9 @@ Begin VB.Form frmUsers
             ForeColor       =   &H00FFFFFF&
             Height          =   300
             Left            =   225
-            TabIndex        =   13
+            TabIndex        =   15
             Top             =   240
-            Width           =   3075
+            Width           =   2235
          End
       End
       Begin VB.Frame fraContainerTitle1 
@@ -99,13 +99,13 @@ Begin VB.Form frmUsers
          End
       End
       Begin MSComctlLib.ListView ListView1 
-         Height          =   5295
+         Height          =   5055
          Left            =   360
-         TabIndex        =   15
+         TabIndex        =   13
          Top             =   1080
          Width           =   12255
          _ExtentX        =   21616
-         _ExtentY        =   9340
+         _ExtentY        =   8916
          View            =   3
          LabelEdit       =   1
          LabelWrap       =   -1  'True
@@ -244,7 +244,7 @@ Begin VB.Form frmUsers
          ForeColor       =   &H00FFFFFF&
          Height          =   315
          Left            =   14400
-         TabIndex        =   14
+         TabIndex        =   12
          Top             =   180
          Width           =   315
       End
@@ -348,7 +348,7 @@ Private Sub Form_Load()
     Me.Caption = "USERS"
     lblTitle.Caption = Me.Caption
     lblUserName.Caption = gstrUserName
-    lblButton1.Caption = "CHANGE PASSWORD"
+    lblButton1.Caption = "ADD USER"
     LoadMousePointer
     SetContainerTitle
     LoadList
@@ -440,50 +440,20 @@ Private Sub SetContainerTitle()
     lblContainerTitle1.Caption = "USERS"
 End Sub
 
-Private Sub Form_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    GetMouseMove Button, X, Y
-End Sub
-
-Private Sub Form_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    SetMouseMove Button, X, Y
-End Sub
-
-Private Sub Form_Unload(Cancel As Integer)
-    frmDashboard.Show
-End Sub
-
-Private Sub fraContainer1_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    GetMouseMove Button, X, Y
-End Sub
-
-Private Sub fraContainer1_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    SetMouseMove Button, X, Y
-End Sub
-
-Private Sub fraContainerTitle1_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    GetMouseMove Button, X, Y
-End Sub
-
-Private Sub fraContainerTitle1_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    SetMouseMove Button, X, Y
+Private Sub fraButton1_Click()
+    With frmUserDetails
+        .Show
+        .PopulateValues "0"
+    End With
+    Unload Me
 End Sub
 
 Private Sub fraMenu1_Click()
-    'MsgBox "" & lblMenu1.Caption, vbInformation, "Click"
     Unload Me
     frmDashboard.Show
 End Sub
 
-'Private Sub fraMenu2_Click()
-'    MsgBox "" & lblMenu2.Caption, vbInformation, "Click"
-'End Sub
-
-Private Sub fraMenuContainer_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    GetMouseMove Button, X, Y
-End Sub
-
 Private Sub fraMenuContainer_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    SetMouseMove Button, X, Y
     fraMenu1.BackColor = &H80000010
     fraMenu2.BackColor = &H80000010
 End Sub
@@ -491,10 +461,6 @@ End Sub
 Private Sub fraMenu1_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
     fraMenu1.BackColor = &HE0E0E0
 End Sub
-
-'Private Sub fraMenu2_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
-'    fraMenu2.BackColor = &HE0E0E0
-'End Sub
 
 Private Sub fraTitle_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
     GetMouseMove Button, X, Y
@@ -504,12 +470,8 @@ Private Sub fraTitle_MouseMove(Button As Integer, Shift As Integer, X As Single,
     SetMouseMove Button, X, Y
 End Sub
 
-Private Sub lblContainerTitle1_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    GetMouseMove Button, X, Y
-End Sub
-
-Private Sub lblContainerTitle1_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    SetMouseMove Button, X, Y
+Private Sub lblButton1_Click()
+    fraButton1_Click
 End Sub
 
 Private Sub lblTitle_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
@@ -537,4 +499,19 @@ End Sub
 Private Sub lblX_Click()
     Unload Me
     frmDashboard.Show
+End Sub
+
+Private Sub ListView1_DblClick()
+On Error GoTo CheckErr
+    If ListView1.ListItems.Count = 0 Then
+        Exit Sub
+    End If
+    With frmUserDetails
+        .Show
+        .PopulateValues ListView1.SelectedItem.Text
+    End With
+    Unload Me
+    Exit Sub
+CheckErr:
+    MsgBox Err.Number & " - " & Err.Description, vbExclamation, "ListView1_DblClick"
 End Sub
