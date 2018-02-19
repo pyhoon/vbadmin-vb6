@@ -255,6 +255,7 @@ Option Explicit
 Dim DB As New OmlDatabase
 Dim strAppDataPath As String
 Dim strAppDataFile As String
+Dim strSQL As String
 
 Dim MoveStartX As Single
 Dim MoveStartY As Single
@@ -390,9 +391,7 @@ Private Sub txtUserID_KeyUp(KeyCode As Integer, Shift As Integer)
 End Sub
 
 Private Function AuthenticateUser() As Boolean
-    Dim con As ADODB.Connection
-    Dim rst As ADODB.Recordset
-    Dim strSQL As String
+    Dim rst As ADODB.Recordset    
     Dim strUserID As String
     Dim strPassword As String
     Dim strSalt As String
@@ -436,9 +435,7 @@ Private Function AuthenticateUser() As Boolean
 End Function
 
 Private Function GetSalt(ByVal strUserID As String) As String
-    Dim con As ADODB.Connection
     Dim rst As ADODB.Recordset
-    Dim strSQL As String
     
     strAppDataPath = App.Path & "\Storage\"
     strAppDataFile = "Data.mdb"
