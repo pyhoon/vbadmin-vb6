@@ -518,7 +518,6 @@ Private Sub lblX_Click()
 End Sub
 
 Public Sub PopulateValues(strUserID As String)
-    Dim con As ADODB.Connection
     Dim rst As ADODB.Recordset
     
     strAppDataPath = App.Path & "\Storage\"
@@ -576,7 +575,6 @@ Public Sub PopulateValues(strUserID As String)
 End Sub
 
 Private Function FindUser() As Boolean
-    Dim con As ADODB.Connection
     Dim rst As ADODB.Recordset
         
     strAppDataPath = App.Path & "\Storage\"
@@ -610,8 +608,6 @@ Private Function FindUser() As Boolean
 End Function
 
 Private Sub AddUser()
-    Dim con As ADODB.Connection
-    
     strAppDataPath = App.Path & "\Storage\"
     strAppDataFile = "Data.mdb"
     With DB
@@ -659,8 +655,6 @@ Private Sub AddUser()
 End Sub
 
 Private Sub UpdateUser()
-    Dim con As ADODB.Connection
-
     strAppDataPath = App.Path & "\Storage\"
     strAppDataFile = "Data.mdb"
     With DB
