@@ -333,7 +333,7 @@ Option Explicit
 Dim DB As New OmlDatabase
 Dim strAppDataPath As String
 Dim strAppDataFile As String
-
+Dim strSQL As String
 Dim MoveStartX As Single
 Dim MoveStartY As Single
 Dim MoveEndX As Single
@@ -356,8 +356,7 @@ End Sub
 
 Private Sub AddColHeader()
     Dim intWidth(0 To 4) As Integer
-    'Dim strText As String
-    On Error GoTo CheckErr
+On Error GoTo CheckErr
     With ListView1
         .ColumnHeaders.Clear
         intWidth(0) = .Width * 0.1
@@ -378,9 +377,7 @@ CheckErr:
 End Sub
 
 Private Sub LoadList()
-    Dim con As ADODB.Connection
     Dim rst As ADODB.Recordset
-    Dim strSQL As String
     Dim List As ListItem
     Dim i As Integer
     Dim r As Integer
