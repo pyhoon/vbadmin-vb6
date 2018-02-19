@@ -399,7 +399,6 @@ Private Sub lblX_Click()
 End Sub
 
 Private Sub LoadCombo()
-    Dim con As ADODB.Connection
     Dim rst As ADODB.Recordset
     Dim i As Integer
     Dim r As Integer
@@ -435,7 +434,6 @@ Private Sub LoadCombo()
 End Sub
 
 Private Function GetSalt(ByVal strUserID As String) As String
-    Dim con As ADODB.Connection
     Dim rst As ADODB.Recordset
     
     strAppDataPath = App.Path & "\Storage\"
@@ -470,8 +468,6 @@ Private Function GetSalt(ByVal strUserID As String) As String
 End Function
 
 Private Sub UpdateSalt(ByVal strUserID As String, ByVal strSalt As String)
-    Dim con As ADODB.Connection
-    
     strAppDataPath = App.Path & "\Storage\"
     strAppDataFile = "Data.mdb"
     With DB
@@ -497,9 +493,9 @@ Private Sub UpdateSalt(ByVal strUserID As String, ByVal strSalt As String)
 End Sub
 
 Private Sub UpdatePassword(ByVal strUserID As String, ByVal strPassword As String)
-    Dim con As ADODB.Connection
     Dim strSalt As String
     
+    strSalt = GetSalt(strUserID)
     strAppDataPath = App.Path & "\Storage\"
     strAppDataFile = "Data.mdb"
     With DB
@@ -511,7 +507,7 @@ Private Sub UpdatePassword(ByVal strUserID As String, ByVal strPassword As Strin
             MsgBox "Error: " & .ErrorDesc, vbExclamation, "Open Database"
             Exit Sub
         End If
-        strSalt = GetSalt(strUserID)
+        
         strSQL = "UPDATE Users SET"
         strSQL = strSQL & " UserPassword = '" & MD5(strPassword & strSalt) & "'"
         strSQL = strSQL & " WHERE UserID = '" & strUserID & "'"
