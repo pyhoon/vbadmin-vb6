@@ -359,10 +359,11 @@ Private Sub lblX_Click()
     'frmDashboard.Show
 End Sub
 
-Private Sub txtPassword_KeyUp(KeyCode As Integer, Shift As Integer)
+Private Sub txtPassword_KeyDown(KeyCode As Integer, Shift As Integer)
     If KeyCode = vbKeyReturn Then
         If Not AuthenticateUser Then
             MsgBox "Wrong User ID or Password!", vbExclamation, "Access Denied"
+            Exit Sub
         Else
             frmDashboard.Show
             Unload Me
