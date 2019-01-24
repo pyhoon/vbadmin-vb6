@@ -294,12 +294,8 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-
-Dim DB As New OmlDatabase
 Dim strAppDataPath As String
 Dim strAppDataFile As String
-Dim strSQL As String
-
 Dim MoveStartX As Single
 Dim MoveStartY As Single
 Dim MoveEndX As Single
@@ -394,131 +390,160 @@ Private Sub SetMouseMove(Button As Integer, X As Single, Y As Single)
 End Sub
 
 Private Sub lblX_Click()
-    Unload Me
     frmUsers.Show
+    Unload Me
 End Sub
 
 Private Sub LoadCombo()
+    Dim DB As New OmlDatabase
+    Dim SB As New OmlSQLBuilder
     Dim rst As ADODB.Recordset
     Dim i As Integer
     Dim r As Integer
-    
+On Error GoTo Catch
     strAppDataPath = App.Path & "\Storage\"
     strAppDataFile = "Data.mdb"
-    With DB
-        .DataPath = strAppDataPath
-        .DataFile = strAppDataFile
-        '.DataPassword = ""
-        .OpenMdb
-        If .ErrorDesc <> "" Then
-            MsgBox "Error: " & .ErrorDesc, vbExclamation, "Open Database"
-            Exit Sub
-        End If
-        strSQL = "SELECT"
-        strSQL = strSQL & " UserID"
-        strSQL = strSQL & " FROM Users"
-        'strSQL = strSQL & " WHERE Active = Yes"
-        Set rst = .OpenRs(strSQL)
-        If .ErrorDesc <> "" Then
-            MsgBox "Error: " & .ErrorDesc, vbExclamation, "Query Database"
-            Exit Sub
-        End If
-        cboUserID.Clear
-        While Not rst.EOF
-            cboUserID.AddItem rst!UserID
-            rst.MoveNext
-        Wend
-        .CloseRs rst
-        .CloseMdb
-    End With
+    DB.DataPath = strAppDataPath
+    DB.DataFile = strAppDataFile
+    'DB.DataPassword = ""
+    DB.OpenMdb
+    If DB.ErrorDesc <> "" Then
+        MsgBox "Error: " & DB.ErrorDesc, vbExclamation, "Open Database"
+        Exit Sub
+    End If
+    'strSQL = "SELECT"
+    'strSQL = strSQL & " UserID"
+    'strSQL = strSQL & " FROM Users"
+    ''strSQL = strSQL & " WHERE Active = Yes"
+    SB.SELECT_ "UserID"
+    SB.FROM "Users"
+    SB.WHERE_Boolean "Active", True
+    Set rst = DB.OpenRs(SB.Text)
+    If DB.ErrorDesc <> "" Then
+        MsgBox "Error: " & DB.ErrorDesc, vbExclamation, "Query Database"
+        Exit Sub
+    End If
+    cboUserID.Clear
+    While Not rst.EOF
+        cboUserID.AddItem rst!UserID
+        rst.MoveNext
+    Wend
+    DB.CloseRs rst
+    DB.CloseMdb
+    Exit Sub
+Catch:
+    MsgBox Err.Number & " - " & Err.Description, vbExclamation, "LoadCombo"
+    DB.CloseRs rst
+    DB.CloseMdb
 End Sub
 
 Private Function GetSalt(ByVal strUserID As String) As String
+    Dim DB As New OmlDatabase
+    Dim SB As New OmlSQLBuilder
     Dim rst As ADODB.Recordset
-    
+On Error GoTo Catch
     strAppDataPath = App.Path & "\Storage\"
     strAppDataFile = "Data.mdb"
-    With DB
-        .DataPath = strAppDataPath
-        .DataFile = strAppDataFile
-        '.DataPassword = ""
-        .OpenMdb
-        If .ErrorDesc <> "" Then
-            MsgBox "Error: " & .ErrorDesc, vbExclamation, "Open Database"
-            Exit Function
-        End If
-        strSQL = "SELECT Salt"
-        strSQL = strSQL & " FROM Users"
-        strSQL = strSQL & " WHERE UserID = '" & strUserID & "'"
-        Set rst = .OpenRs(strSQL)
-        If .ErrorDesc <> "" Then
-            MsgBox "Error: " & .ErrorDesc, vbExclamation, "Query Database"
-            Exit Function
-        End If
-        With rst
-            If Not .EOF Then
-                GetSalt = !Salt
-            Else
-                GetSalt = ""
-            End If
-        End With
-        .CloseRs rst
-        .CloseMdb
-    End With
+    DB.DataPath = strAppDataPath
+    DB.DataFile = strAppDataFile
+    'DB.DataPassword = ""
+    DB.OpenMdb
+    If DB.ErrorDesc <> "" Then
+        MsgBox "Error: " & DB.ErrorDesc, vbExclamation, "Open Database"
+        Exit Function
+    End If
+    'strSQL = "SELECT Salt"
+    'strSQL = strSQL & " FROM Users"
+    'strSQL = strSQL & " WHERE UserID = '" & strUserID & "'"
+    SB.SELECT_ "Salt"
+    SB.FROM "Users"
+    SB.WHERE_Text "UserID", strUserID
+    Set rst = DB.OpenRs(SB.Text)
+    If DB.ErrorDesc <> "" Then
+        MsgBox "Error: " & DB.ErrorDesc, vbExclamation, "Query Database"
+        Exit Function
+    End If
+    If Not rst.EOF Then
+        GetSalt = rst!Salt
+    Else
+        GetSalt = ""
+    End If
+    DB.CloseRs rst
+    DB.CloseMdb
+    Exit Function
+Catch:
+    MsgBox Err.Number & " - " & Err.Description, vbExclamation, "GetSalt"
+    DB.CloseRs rst
+    DB.CloseMdb
+    GetSalt = ""
 End Function
 
 Private Sub UpdateSalt(ByVal strUserID As String, ByVal strSalt As String)
+    Dim DB As New OmlDatabase
+    Dim SB As New OmlSQLBuilder
+On Error GoTo Catch
     strAppDataPath = App.Path & "\Storage\"
     strAppDataFile = "Data.mdb"
-    With DB
-        .DataPath = strAppDataPath
-        .DataFile = strAppDataFile
-        '.DataPassword = ""
-        .OpenMdb
-        If .ErrorDesc <> "" Then
-            MsgBox "Error: " & .ErrorDesc, vbExclamation, "Open Database"
-            Exit Sub
-        End If
-        strSQL = "UPDATE Users SET"
-        strSQL = strSQL & " Salt = '" & GenerateSalt(strSalt) & "'"
-        strSQL = strSQL & " WHERE UserID = '" & strUserID & "'"
-        .Execute strSQL
-        If .ErrorDesc <> "" Then
-            MsgBox "Error: " & .ErrorDesc, vbExclamation, "Update Database"
-            Exit Sub
-        End If
-        MsgBox "Salt updated", vbInformation, "UpdateSalt"
-        .CloseMdb
-    End With
+    DB.DataPath = strAppDataPath
+    DB.DataFile = strAppDataFile
+    'DB.DataPassword = ""
+    DB.OpenMdb
+    If DB.ErrorDesc <> "" Then
+        MsgBox "Error: " & DB.ErrorDesc, vbExclamation, "Open Database"
+        Exit Sub
+    End If
+    'strSQL = "UPDATE Users SET"
+    'strSQL = strSQL & " Salt = '" & GenerateSalt(strSalt) & "'"
+    'strSQL = strSQL & " WHERE UserID = '" & strUserID & "'"
+    SB.UPDATE "Users"
+    SB.UTX "Salt", GenerateSalt(strSalt), 0
+    SB.WHERE_Text "UserID", strUserID
+    DB.Execute SB.Text
+    If DB.ErrorDesc <> "" Then
+        MsgBox "Error: " & DB.ErrorDesc, vbExclamation, "Update Database"
+        Exit Sub
+    End If
+    MsgBox "Salt updated", vbInformation, "UpdateSalt"
+    DB.CloseMdb
+    Exit Sub
+Catch:
+    MsgBox Err.Number & " - " & Err.Description, vbExclamation, "UpdateSalt"
+    DB.CloseMdb
 End Sub
 
 Private Sub UpdatePassword(ByVal strUserID As String, ByVal strPassword As String)
+    Dim DB As New OmlDatabase
+    Dim SB As New OmlSQLBuilder
     Dim strSalt As String
-    
-    strSalt = GetSalt(strUserID)
+On Error GoTo Catch
     strAppDataPath = App.Path & "\Storage\"
     strAppDataFile = "Data.mdb"
-    With DB
-        .DataPath = strAppDataPath
-        .DataFile = strAppDataFile
-        '.DataPassword = ""
-        .OpenMdb
-        If .ErrorDesc <> "" Then
-            MsgBox "Error: " & .ErrorDesc, vbExclamation, "Open Database"
-            Exit Sub
-        End If
-        
-        strSQL = "UPDATE Users SET"
-        strSQL = strSQL & " UserPassword = '" & MD5(strPassword & strSalt) & "'"
-        strSQL = strSQL & " WHERE UserID = '" & strUserID & "'"
-        .Execute strSQL
-        If .ErrorDesc <> "" Then
-            MsgBox "Error: " & .ErrorDesc, vbExclamation, "Update Database"
-            Exit Sub
-        End If
-        MsgBox "Password updated", vbInformation, "UpdatePassword"
-        .CloseMdb
-    End With
+    DB.DataPath = strAppDataPath
+    DB.DataFile = strAppDataFile
+    'DB.DataPassword = ""
+    DB.OpenMdb
+    If DB.ErrorDesc <> "" Then
+        MsgBox "Error: " & DB.ErrorDesc, vbExclamation, "Open Database"
+        Exit Sub
+    End If
+    strSalt = GetSalt(strUserID)
+    'strSQL = "UPDATE Users SET"
+    'strSQL = strSQL & " UserPassword = '" & MD5(strPassword & strSalt) & "'"
+    'strSQL = strSQL & " WHERE UserID = '" & strUserID & "'"
+    SB.UPDATE "Users"
+    SB.UTX "UserPassword", MD5(strPassword & strSalt), 0
+    SB.WHERE_Text "UserID", strUserID
+    DB.Execute SB.Text
+    If DB.ErrorDesc <> "" Then
+        MsgBox "Error: " & DB.ErrorDesc, vbExclamation, "Update Database"
+        Exit Sub
+    End If
+    MsgBox "Password updated", vbInformation, "UpdatePassword"
+    DB.CloseMdb
+    Exit Sub
+Catch:
+    MsgBox Err.Number & " - " & Err.Description, vbExclamation, "UpdatePassword"
+    DB.CloseMdb
 End Sub
 
 Private Function GenerateSalt(ByVal strPlain As String) As String
