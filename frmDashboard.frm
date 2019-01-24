@@ -40,6 +40,7 @@ Begin VB.Form frmDashboard
          ForeColor       =   &H80000008&
          Height          =   735
          Left            =   3360
+         MousePointer    =   99  'Custom
          TabIndex        =   23
          Top             =   4200
          Width           =   2775
@@ -551,11 +552,8 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-
-Dim DB As New OmlDatabase
 Dim strAppDataPath As String
 Dim strAppDataFile As String
-
 Dim MoveStartX As Single
 Dim MoveStartY As Single
 Dim MoveEndX As Single
@@ -579,6 +577,7 @@ Private Sub LoadMousePointer()
 On Error Resume Next
     fraMenu1.MouseIcon = LoadPicture(App.Path & "\Resources\Icon\hand.ico")
     fraMenu2.MouseIcon = LoadPicture(App.Path & "\Resources\Icon\hand.ico")
+    fraButton2.MouseIcon = LoadPicture(App.Path & "\Resources\Icon\hand.ico")
 End Sub
 
 Private Sub SetBoxColour()
@@ -600,8 +599,8 @@ Private Sub fraButton2_Click()
 End Sub
 
 Private Sub fraMenu2_Click()
-    Me.Hide
     frmUsers.Show
+    Me.Hide
 End Sub
 
 Private Sub fraMenuContainer_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
@@ -626,8 +625,8 @@ Private Sub fraTitle_MouseMove(Button As Integer, Shift As Integer, X As Single,
 End Sub
 
 Private Sub lblButton2_Click()
-    Me.Hide
     frmHelp.Show
+    Me.Hide
 End Sub
 
 Private Sub lblTitle_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
