@@ -251,12 +251,8 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-
-Dim DB As New OmlDatabase
 Dim strAppDataPath As String
 Dim strAppDataFile As String
-Dim strSQL As String
-
 Dim MoveStartX As Single
 Dim MoveStartY As Single
 Dim MoveEndX As Single
@@ -310,12 +306,6 @@ Private Sub fraContainer1_MouseMove(Button As Integer, Shift As Integer, X As Si
     End With
 End Sub
 
-Private Sub fraTitle_Click()
-    ' Shortcut
-    txtUserID.Text = "Aeric"
-    txtPassword.Text = "aeric"
-End Sub
-
 Private Sub fraTitle_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
     GetMouseMove Button, X, Y
 End Sub
@@ -328,8 +318,8 @@ Private Sub fraButton1_Click()
     If Not AuthenticateUser Then
         MsgBox "Wrong User ID or Password!", vbExclamation, "Access Denied"
     Else
-        Unload Me
         frmDashboard.Show
+        Unload Me
     End If
 End Sub
 
@@ -337,8 +327,8 @@ Private Sub lblButton1_Click()
     If Not AuthenticateUser Then
         MsgBox "Wrong User ID or Password!", vbExclamation, "Access Denied"
     Else
-        Unload Me
         frmDashboard.Show
+        Unload Me
     End If
 End Sub
 
@@ -374,8 +364,8 @@ Private Sub txtPassword_KeyUp(KeyCode As Integer, Shift As Integer)
         If Not AuthenticateUser Then
             MsgBox "Wrong User ID or Password!", vbExclamation, "Access Denied"
         Else
-            Unload Me
             frmDashboard.Show
+            Unload Me
         End If
     End If
 End Sub
@@ -391,79 +381,97 @@ Private Sub txtUserID_KeyUp(KeyCode As Integer, Shift As Integer)
 End Sub
 
 Private Function AuthenticateUser() As Boolean
-    Dim rst As ADODB.Recordset    
+    Dim DB As New OmlDatabase
+    Dim SB As New OmlSQLBuilder
+    Dim rst As ADODB.Recordset
     Dim strUserID As String
     Dim strPassword As String
     Dim strSalt As String
-        
+On Error GoTo Catch
     strAppDataPath = App.Path & "\Storage\"
     strAppDataFile = "Data.mdb"
     
     strUserID = Trim(txtUserID.Text)
     strPassword = Trim(txtPassword.Text)
     strSalt = GetSalt(strUserID)
-    
-    With DB
-        .DataPath = strAppDataPath
-        .DataFile = strAppDataFile
-        '.DataPassword = ""
-        .OpenMdb
-        If .ErrorDesc <> "" Then
-            MsgBox "Error: " & .ErrorDesc, vbExclamation, "Open Database"
-            Exit Function
-        End If
-        strSQL = "SELECT UserName"
-        strSQL = strSQL & " FROM Users"
-        strSQL = strSQL & " WHERE UserID = '" & strUserID & "'"
-        strSQL = strSQL & " AND UserPassword = '" & MD5(strPassword & strSalt) & "'"
-        strSQL = strSQL & " AND Active = Yes"
-        Set rst = .OpenRs(strSQL)
-        If .ErrorDesc <> "" Then
-            MsgBox "Error: " & .ErrorDesc, vbExclamation, "Query Database"
-            Exit Function
-        End If
-        If Not rst.EOF Then
-            gstrUserName = rst!UserName
-            AuthenticateUser = True
-        Else
-            gstrUserName = ""
-            AuthenticateUser = False
-        End If
-        .CloseRs rst
-        .CloseMdb
-    End With
+
+    DB.DataPath = strAppDataPath
+    DB.DataFile = strAppDataFile
+    'DB.DataPassword = ""
+    DB.OpenMdb
+    If DB.ErrorDesc <> "" Then
+        MsgBox "Error: " & DB.ErrorDesc, vbExclamation, "Open Database"
+        Exit Function
+    End If
+    'strSQL = "SELECT UserName"
+    'strSQL = strSQL & " FROM Users"
+    'strSQL = strSQL & " WHERE UserID = '" & strUserID & "'"
+    'strSQL = strSQL & " AND UserPassword = '" & MD5(strPassword & strSalt) & "'"
+    'strSQL = strSQL & " AND Active = Yes"
+    SB.SELECT_ "UserName"
+    SB.FROM "Users"
+    SB.WHERE_Text "UserID", strUserID
+    SB.AND_Text "UserPassword", MD5(strPassword & strSalt)
+    SB.AND_Boolean "Active", "Yes"
+    Set rst = DB.OpenRs(SB.Text)
+    If DB.ErrorDesc <> "" Then
+        MsgBox "Error: " & DB.ErrorDesc, vbExclamation, "Query Database"
+        Exit Function
+    End If
+    If Not rst.EOF Then
+        gstrUserName = rst!UserName
+        AuthenticateUser = True
+    Else
+        gstrUserName = ""
+        AuthenticateUser = False
+    End If
+    DB.CloseRs rst
+    DB.CloseMdb
+    Exit Function
+Catch:
+    MsgBox Err.Number & " - " & Err.Description, vbExclamation, "AuthenticateUser"
+    DB.CloseRs rst
+    DB.CloseMdb
+    AuthenticateUser = False
 End Function
 
 Private Function GetSalt(ByVal strUserID As String) As String
+    Dim DB As New OmlDatabase
+    Dim SB As New OmlSQLBuilder
     Dim rst As ADODB.Recordset
-    
+On Error GoTo Catch
     strAppDataPath = App.Path & "\Storage\"
     strAppDataFile = "Data.mdb"
-    With DB
-        .DataPath = strAppDataPath
-        .DataFile = strAppDataFile
-        '.DataPassword = ""
-        .OpenMdb
-        If .ErrorDesc <> "" Then
-            MsgBox "Error: " & .ErrorDesc, vbExclamation, "Open Database"
-            Exit Function
-        End If
-        strSQL = "SELECT Salt"
-        strSQL = strSQL & " FROM Users"
-        strSQL = strSQL & " WHERE UserID = '" & strUserID & "'"
-        Set rst = .OpenRs(strSQL)
-        If .ErrorDesc <> "" Then
-            MsgBox "Error: " & .ErrorDesc, vbExclamation, "Query Database"
-            Exit Function
-        End If
-        With rst
-            If Not .EOF Then
-                GetSalt = !Salt
-            Else
-                GetSalt = ""
-            End If
-        End With
-        .CloseRs rst
-        .CloseMdb
-    End With
+    DB.DataPath = strAppDataPath
+    DB.DataFile = strAppDataFile
+    'DB.DataPassword = ""
+    DB.OpenMdb
+    If DB.ErrorDesc <> "" Then
+        MsgBox "Error: " & DB.ErrorDesc, vbExclamation, "Open Database"
+        Exit Function
+    End If
+    'strSQL = "SELECT Salt"
+    'strSQL = strSQL & " FROM Users"
+    'strSQL = strSQL & " WHERE UserID = '" & strUserID & "'"
+    SB.SELECT_ "Salt"
+    SB.FROM "Users"
+    SB.WHERE_Text "UserID", strUserID
+    Set rst = DB.OpenRs(SB.Text)
+    If DB.ErrorDesc <> "" Then
+        MsgBox "Error: " & DB.ErrorDesc, vbExclamation, "Query Database"
+        Exit Function
+    End If
+    If Not rst.EOF Then
+        GetSalt = rst!Salt
+    Else
+        GetSalt = ""
+    End If
+    DB.CloseRs rst
+    DB.CloseMdb
+    Exit Function
+Catch:
+    MsgBox Err.Number & " - " & Err.Description, vbExclamation, "GetSalt"
+    DB.CloseRs rst
+    DB.CloseMdb
+    GetSalt = ""
 End Function
