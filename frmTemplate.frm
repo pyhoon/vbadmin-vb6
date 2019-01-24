@@ -519,7 +519,6 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-
 Dim MoveStartX As Single
 Dim MoveStartY As Single
 Dim MoveEndX As Single
