@@ -384,18 +384,14 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-
-Dim DB As New OmlDatabase
 Dim strAppDataPath As String
 Dim strAppDataFile As String
-Dim strSQL As String
 Dim strUserID As String
 Dim strUserName As String
 Dim strUserRole As String
 Dim strActive As String
 Dim strSalt As String
 Dim strPassword As String
-
 Dim MoveStartX As Single
 Dim MoveStartY As Single
 Dim MoveEndX As Single
@@ -426,6 +422,7 @@ End Sub
 Private Sub LoadMousePointer()
 On Error Resume Next
     fraButton1.MouseIcon = LoadPicture(App.Path & "\Resources\Icon\hand.ico")
+    fraButton2.MouseIcon = LoadPicture(App.Path & "\Resources\Icon\hand.ico")
 End Sub
 
 Private Sub SetContainerTitle()
@@ -518,175 +515,222 @@ Private Sub lblX_Click()
 End Sub
 
 Public Sub PopulateValues(strUserID As String)
+    Dim DB As New OmlDatabase
+    Dim SB As New OmlSQLBuilder
     Dim rst As ADODB.Recordset
-    
+On Error GoTo Catch
     strAppDataPath = App.Path & "\Storage\"
     strAppDataFile = "Data.mdb"
-    With DB
-        .DataPath = strAppDataPath
-        .DataFile = strAppDataFile
-        '.DataPassword = ""
-        .OpenMdb
-        If .ErrorDesc <> "" Then
-            MsgBox "Error: " & .ErrorDesc, vbExclamation, "Open Database"
-            Exit Sub
+    DB.DataPath = strAppDataPath
+    DB.DataFile = strAppDataFile
+    'DB.DataPassword = ""
+    DB.OpenMdb
+    If DB.ErrorDesc <> "" Then
+        MsgBox "Error: " & DB.ErrorDesc, vbExclamation, "Open Database"
+        Exit Sub
+    End If
+    'strSQL = "SELECT"
+    'strSQL = strSQL & " UserID,"
+    'strSQL = strSQL & " UserName,"
+    'strSQL = strSQL & " UserRole,"
+    'strSQL = strSQL & " Active"
+    'strSQL = strSQL & " FROM Users"
+    'strSQL = strSQL & " WHERE ID = " & strUserID
+    SB.SELECT_
+    SB.SQL "UserID"
+    SB.SQL "UserName"
+    SB.SQL "UserRole"
+    SB.SQL "Active", 0
+    SB.FROM "Users"
+    SB.WHERE_Long "ID", CLng(strUserID)
+    Set rst = DB.OpenRs(SB.Text)
+    If DB.ErrorDesc <> "" Then
+        MsgBox "Error: " & DB.ErrorDesc, vbExclamation, "Query Database"
+        Exit Sub
+    End If
+    If Not rst.EOF Then
+        txtUserID.Text = rst!UserID
+        txtUserName.Text = rst!UserName
+        cboUserRole.Text = rst!UserRole
+        If rst!Active Then
+            optActive(0).Value = True
+        Else
+            optActive(1).Value = True
         End If
-        strSQL = "SELECT"
-        strSQL = strSQL & " UserID,"
-        strSQL = strSQL & " UserName,"
-        strSQL = strSQL & " UserRole,"
-        strSQL = strSQL & " Active"
-        strSQL = strSQL & " FROM Users"
-        strSQL = strSQL & " WHERE ID = " & strUserID
-        Set rst = .OpenRs(strSQL)
-        If .ErrorDesc <> "" Then
-            MsgBox "Error: " & .ErrorDesc, vbExclamation, "Query Database"
-            Exit Sub
-        End If
-        With rst
-            If Not .EOF Then
-                txtUserID.Text = !UserID
-                txtUserName.Text = !UserName
-                cboUserRole.Text = !UserRole
-                If !Active Then
-                    optActive(0).Value = True
-                Else
-                    optActive(1).Value = True
-                End If
-                txtUserID.Enabled = False
-                With txtUserName
-                    .SelStart = Len(.Text)
-                    .SelLength = 0
-                End With
-            Else
-                txtUserID.Text = ""
-                txtUserName.Text = ""
-                cboUserRole.ListIndex = -1
-                optActive(1).Value = True ' Default = No
-                With txtUserID
-                    .Enabled = True
-                    .SetFocus
-                End With
-            End If
+        txtUserID.Enabled = False
+        With txtUserName
+            .SelStart = Len(.Text)
+            .SelLength = 0
         End With
-        .CloseRs rst
-        .CloseMdb
-    End With
+    Else
+        txtUserID.Text = ""
+        txtUserName.Text = ""
+        cboUserRole.ListIndex = -1
+        optActive(1).Value = True ' Default = No
+        With txtUserID
+            .Enabled = True
+            .SetFocus
+        End With
+    End If
+    DB.CloseRs rst
+    DB.CloseMdb
+    Exit Sub
+Catch:
+    MsgBox Err.Number & " - " & Err.Description, vbExclamation, "PopulateValues"
+    DB.CloseRs rst
+    DB.CloseMdb
 End Sub
 
 Private Function FindUser() As Boolean
+    Dim DB As New OmlDatabase
+    Dim SB As New OmlSQLBuilder
     Dim rst As ADODB.Recordset
-        
+On Error GoTo Catch
     strAppDataPath = App.Path & "\Storage\"
     strAppDataFile = "Data.mdb"
-    With DB
-        .DataPath = strAppDataPath
-        .DataFile = strAppDataFile
-        '.DataPassword = ""
-        .OpenMdb
-        If .ErrorDesc <> "" Then
-            MsgBox "Error: " & .ErrorDesc, vbExclamation, "Open Database"
-            Exit Function
-        End If
-        strUserID = Trim(txtUserID.Text)
-        strSQL = "SELECT ID"
-        strSQL = strSQL & " FROM Users"
-        strSQL = strSQL & " WHERE UserID = '" & strUserID & "'"
-        Set rst = .OpenRs(strSQL)
-        If .ErrorDesc <> "" Then
-            MsgBox "Error: " & .ErrorDesc, vbExclamation, "Query Database"
-            Exit Function
-        End If
-        If Not rst.EOF Then
-            FindUser = True
-        Else
-            FindUser = False
-        End If
-        .CloseRs rst
-        .CloseMdb
-    End With
+    DB.DataPath = strAppDataPath
+    DB.DataFile = strAppDataFile
+    'DB.DataPassword = ""
+    DB.OpenMdb
+    If DB.ErrorDesc <> "" Then
+        MsgBox "Error: " & DB.ErrorDesc, vbExclamation, "Open Database"
+        Exit Function
+    End If
+    strUserID = Trim(txtUserID.Text)
+    'strSQL = "SELECT ID"
+    'strSQL = strSQL & " FROM Users"
+    'strSQL = strSQL & " WHERE UserID = '" & strUserID & "'"
+    SB.SELECT_ID "Users"
+    SB.WHERE_Text "UserID", strUserID
+    Set rst = DB.OpenRs(SB.Text)
+    If DB.ErrorDesc <> "" Then
+        MsgBox "Error: " & DB.ErrorDesc, vbExclamation, "Query Database"
+        Exit Function
+    End If
+    If Not rst.EOF Then
+        FindUser = True
+    Else
+        FindUser = False
+    End If
+    DB.CloseRs rst
+    DB.CloseMdb
+    Exit Function
+Catch:
+    MsgBox Err.Number & " - " & Err.Description, vbExclamation, "FindUser"
+    DB.CloseRs rst
+    DB.CloseMdb
+    FindUser = False
 End Function
 
 Private Sub AddUser()
+    Dim DB As New OmlDatabase
+    Dim SB As New OmlSQLBuilder
+On Error GoTo Catch
     strAppDataPath = App.Path & "\Storage\"
     strAppDataFile = "Data.mdb"
-    With DB
-        .DataPath = strAppDataPath
-        .DataFile = strAppDataFile
-        '.DataPassword = ""
-        .OpenMdb
-        If .ErrorDesc <> "" Then
-            MsgBox "Error: " & .ErrorDesc, vbExclamation, "Open Database"
-            Exit Sub
-        End If
-        strUserID = Trim(txtUserID.Text)
-        strUserName = Trim(txtUserName.Text)
-        strUserRole = cboUserRole.Text
-        If optActive(0).Value = True Then
-            strActive = "Yes"
-        Else
-            strActive = "No"
-        End If
-        strSalt = GenerateSalt("SECRET")    ' default
-        strPassword = strUserID             ' default
-        strPassword = MD5(strPassword & strSalt)
-        strSQL = "INSERT INTO Users"
-        strSQL = strSQL & " (UserID,"
-        strSQL = strSQL & " UserName,"
-        strSQL = strSQL & " UserRole,"
-        strSQL = strSQL & " Salt,"
-        strSQL = strSQL & " UserPassword,"
-        strSQL = strSQL & " Active)"
-        strSQL = strSQL & " VALUES"
-        strSQL = strSQL & " ('" & strUserID & "',"
-        strSQL = strSQL & " '" & strUserName & "',"
-        strSQL = strSQL & " '" & strUserRole & "',"
-        strSQL = strSQL & " '" & strSalt & "',"
-        strSQL = strSQL & " '" & strPassword & "',"
-        strSQL = strSQL & " " & strActive & ")"
-        .Execute strSQL
-        If .ErrorDesc <> "" Then
-            MsgBox "Error: " & .ErrorDesc, vbExclamation, "Add User"
-            Exit Sub
-        End If
-        MsgBox "User added", vbInformation, "Add User"
-        .CloseMdb
-    End With
+    DB.DataPath = strAppDataPath
+    DB.DataFile = strAppDataFile
+    'DB.DataPassword = ""
+    DB.OpenMdb
+    If DB.ErrorDesc <> "" Then
+        MsgBox "Error: " & DB.ErrorDesc, vbExclamation, "Open Database"
+        Exit Sub
+    End If
+    strUserID = Trim(txtUserID.Text)
+    strUserName = Trim(txtUserName.Text)
+    strUserRole = cboUserRole.Text
+    If optActive(0).Value = True Then
+        strActive = "Yes"
+    Else
+        strActive = "No"
+    End If
+    strSalt = GenerateSalt("SECRET")    ' default
+    strPassword = strUserID             ' default
+    strPassword = MD5(strPassword & strSalt)
+    'strSQL = "INSERT INTO Users"
+    'strSQL = strSQL & " (UserID,"
+    'strSQL = strSQL & " UserName,"
+    'strSQL = strSQL & " UserRole,"
+    'strSQL = strSQL & " Salt,"
+    'strSQL = strSQL & " UserPassword,"
+    'strSQL = strSQL & " Active)"
+    'strSQL = strSQL & " VALUES"
+    'strSQL = strSQL & " ('" & strUserID & "',"
+    'strSQL = strSQL & " '" & strUserName & "',"
+    'strSQL = strSQL & " '" & strUserRole & "',"
+    'strSQL = strSQL & " '" & strSalt & "',"
+    'strSQL = strSQL & " '" & strPassword & "',"
+    'strSQL = strSQL & " " & strActive & ")"
+    SB.INSERT "Users"
+    SB.SOB "UserID"
+    SB.SQL "UserName"
+    SB.SQL "UserRole"
+    SB.SQL "Salt"
+    SB.SQL "UserPassword"
+    SB.SCB "Active"
+    SB.VALUES
+    SB.VOB strUserID
+    SB.VTX strUserName
+    SB.VTX strUserRole
+    SB.VTX strSalt
+    SB.VTX strPassword
+    SB.VCB strActive, 0
+    DB.Execute SB.Text
+    If DB.ErrorDesc <> "" Then
+        MsgBox "Error: " & DB.ErrorDesc, vbExclamation, "Add User"
+        Exit Sub
+    End If
+    MsgBox "User added", vbInformation, "Add User"
+    DB.CloseMdb
+    Exit Sub
+Catch:
+    MsgBox Err.Number & " - " & Err.Description, vbExclamation, "AddUser"
+    DB.CloseMdb
 End Sub
 
 Private Sub UpdateUser()
+    Dim DB As New OmlDatabase
+    Dim SB As New OmlSQLBuilder
+On Error GoTo Catch
     strAppDataPath = App.Path & "\Storage\"
     strAppDataFile = "Data.mdb"
-    With DB
-        .DataPath = strAppDataPath
-        .DataFile = strAppDataFile
-        '.DataPassword = ""
-        .OpenMdb
-        If .ErrorDesc <> "" Then
-            MsgBox "Error: " & .ErrorDesc, vbExclamation, "Open Database"
-            Exit Sub
-        End If
-        strUserID = Trim(txtUserID.Text)
-        strUserName = Trim(txtUserName.Text)
-        strUserRole = cboUserRole.Text
-        If optActive(0).Value = True Then
-            strActive = "Yes"
-        Else
-            strActive = "No"
-        End If
-        strSQL = "UPDATE Users SET"
-        strSQL = strSQL & " UserName = '" & strUserName & "',"
-        strSQL = strSQL & " UserRole = '" & strUserRole & "',"
-        strSQL = strSQL & " Active = " & strActive
-        strSQL = strSQL & " WHERE UserID = '" & strUserID & "'"
-        .Execute strSQL
-        If .ErrorDesc <> "" Then
-            MsgBox "Error: " & .ErrorDesc, vbExclamation, "Update User"
-            Exit Sub
-        End If
-        MsgBox "User updated", vbInformation, "Update User"
-        .CloseMdb
-    End With
+    DB.DataPath = strAppDataPath
+    DB.DataFile = strAppDataFile
+    'DB.DataPassword = ""
+    DB.OpenMdb
+    If DB.ErrorDesc <> "" Then
+        MsgBox "Error: " & DB.ErrorDesc, vbExclamation, "Open Database"
+        Exit Sub
+    End If
+    strUserID = Trim(txtUserID.Text)
+    strUserName = Trim(txtUserName.Text)
+    strUserRole = cboUserRole.Text
+    'If optActive(0).Value = True Then
+    '    strActive = "Yes"
+    'Else
+    '    strActive = "No"
+    'End If
+    'strSQL = "UPDATE Users SET"
+    'strSQL = strSQL & " UserName = '" & strUserName & "',"
+    'strSQL = strSQL & " UserRole = '" & strUserRole & "',"
+    'strSQL = strSQL & " Active = " & strActive
+    'strSQL = strSQL & " WHERE UserID = '" & strUserID & "'"
+    SB.UPDATE "Users"
+    SB.UTX "UserName", strUserName
+    SB.UTX "UserRole", strUserRole
+    SB.UYN "Active", optActive(0).Value, 0
+    SB.WHERE_Text "UserID", strUserID
+    DB.Execute SB.Text
+    If DB.ErrorDesc <> "" Then
+        MsgBox "Error: " & DB.ErrorDesc, vbExclamation, "Update User"
+        Exit Sub
+    End If
+    MsgBox "User updated", vbInformation, "Update User"
+    DB.CloseMdb
+    Exit Sub
+Catch:
+    MsgBox Err.Number & " - " & Err.Description, vbExclamation, "UpdateUser"
+    DB.CloseMdb
 End Sub
 
 Private Function GenerateSalt(ByVal strPlain As String) As String
