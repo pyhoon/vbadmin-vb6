@@ -1,9 +1,24 @@
+VERSION 1.0 CLASS
+BEGIN
+  MultiUse = -1  'True
+  Persistable = 0  'NotPersistable
+  DataBindingBehavior = 0  'vbNone
+  DataSourceBehavior  = 0  'vbNone
+  MTSTransactionMode  = 0  'NotAnMTSObject
+END
+Attribute VB_Name = "OmlDatabase"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = True
+Attribute VB_PredeclaredId = False
+Attribute VB_Exposed = False
+Attribute VB_Ext_KEY = "SavedWithClassBuilder6" ,"Yes"
+Attribute VB_Ext_KEY = "Top_Level" ,"Yes"
 '**************************************************************************
 '   Library Name: Omelette Database Class (OmlDatabase)
 '**************************************************************************
-' Version: 1.0.0.0
+' Version: 1.1.0.0
 ' Created on: 01 Feb 2018
-' Updated on: 08 Feb 2018
+' Updated on: 24 Jan 2019
 ' Created by: Aeric Poon Yip Hoon
 ' Description: A high level API written for MS Visual Basic 6.0
 '**************************************************************************
@@ -145,8 +160,58 @@ Try: ' Optional
 Catch:
     ErrorDesc = Err.Description
     On Error Resume Next
-    mconADODB.RollbackTrans
-    ErrorDesc = ErrorDesc & " " & strSQL
+    If Not mconADODB Is Nothing Then
+        mconADODB.RollbackTrans
+    End If
+    'ErrorDesc = ErrorDesc & vbCrLf & "SQL: " & strSQL
+End Sub
+
+' Created on 19 Jan 2019
+' Not yet tested
+Public Sub Execute2(ByVal strSQL As String, ByRef ParamName() As String, ByRef ParamValue() As String, Optional ByRef lngRecordsAffected As Long)
+On Error GoTo Catch
+'Dim cmd As ADODB.Command
+'Set cmd = New ADODB.Command
+Dim cmd As New ADODB.Command
+'Dim prm As ADODB.Parameter
+'Set prm = New ADODB.Parameter
+Dim prm As New ADODB.Parameter
+Dim i As Integer
+Try: ' Optional
+    With mconADODB
+        .BeginTrans
+        '.Execute strSQL, lngRecordsAffected
+        With cmd
+            .ActiveConnection = mconADODB
+            .CommandType = adCmdText
+            .CommandText = strSQL
+            .Prepared = True
+            'Dim prm As New ADODB.Parameter
+            For i = 0 To UBound(ParamName)
+                With prm
+                    '.Type = adEmpty
+                    '.Direction = adParamInput
+                    'If ParamLength(i) > 0 Then .Size = ParamLength(i)
+                    .Name = ParamName(i)
+                    .Value = ParamValue(i)
+                End With
+                '.Parameters(i) = prm
+                'prm = .CreateParameter(ParamName(i), adEmpty, adParamInput, ADO_LONGPTR, ParamValue(i))
+                .Parameters.Append prm
+            Next
+            '.Execute lngRecordsAffected, prm
+            .Execute lngRecordsAffected
+        End With
+        .CommitTrans
+    End With
+    Exit Sub
+Catch:
+    ErrorDesc = Err.Description
+    On Error Resume Next
+    If Not mconADODB Is Nothing Then
+        mconADODB.RollbackTrans
+    End If
+    'ErrorDesc = ErrorDesc & vbCrLf & "SQL: " & strSQL
 End Sub
 
 Public Function OpenRs(ByVal strSQL As String) As ADODB.Recordset
@@ -157,7 +222,7 @@ Try:
     Set OpenRs = rst
     Exit Function
 Catch:
-    ErrorDesc = Err.Description & " " & strSQL
+    ErrorDesc = Err.Description & vbCrLf & "SQL: " & strSQL
 End Function
 
 Public Sub CloseRs(ByVal rst As ADODB.Recordset)
