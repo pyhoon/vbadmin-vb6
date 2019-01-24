@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.1#0"; "MSCOMCTL.OCX"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
 Begin VB.Form frmUsers 
    Appearance      =   0  'Flat
    BackColor       =   &H00E0E0E0&
@@ -40,9 +40,9 @@ Begin VB.Form frmUsers
          BorderStyle     =   0  'None
          ForeColor       =   &H80000008&
          Height          =   735
-         Left            =   9840
+         Left            =   3360
          MousePointer    =   99  'Custom
-         TabIndex        =   14
+         TabIndex        =   18
          Top             =   6360
          Width           =   2775
          Begin VB.Label lblButton1 
@@ -50,6 +50,72 @@ Begin VB.Form frmUsers
             AutoSize        =   -1  'True
             BackStyle       =   0  'Transparent
             Caption         =   "BUTTON LABEL 1"
+            BeginProperty Font 
+               Name            =   "MS Sans Serif"
+               Size            =   12
+               Charset         =   0
+               Weight          =   700
+               Underline       =   0   'False
+               Italic          =   0   'False
+               Strikethrough   =   0   'False
+            EndProperty
+            ForeColor       =   &H00FFFFFF&
+            Height          =   300
+            Left            =   225
+            TabIndex        =   19
+            Top             =   240
+            Width           =   2235
+         End
+      End
+      Begin VB.Frame fraButton2 
+         Appearance      =   0  'Flat
+         BackColor       =   &H00B7D736&
+         BorderStyle     =   0  'None
+         ForeColor       =   &H80000008&
+         Height          =   735
+         Left            =   6600
+         MousePointer    =   99  'Custom
+         TabIndex        =   16
+         Top             =   6360
+         Width           =   2775
+         Begin VB.Label lblButton2 
+            Alignment       =   2  'Center
+            AutoSize        =   -1  'True
+            BackStyle       =   0  'Transparent
+            Caption         =   "BUTTON LABEL 2"
+            BeginProperty Font 
+               Name            =   "MS Sans Serif"
+               Size            =   12
+               Charset         =   0
+               Weight          =   700
+               Underline       =   0   'False
+               Italic          =   0   'False
+               Strikethrough   =   0   'False
+            EndProperty
+            ForeColor       =   &H00FFFFFF&
+            Height          =   300
+            Left            =   225
+            TabIndex        =   17
+            Top             =   240
+            Width           =   2235
+         End
+      End
+      Begin VB.Frame fraButton3 
+         Appearance      =   0  'Flat
+         BackColor       =   &H00B7D736&
+         BorderStyle     =   0  'None
+         ForeColor       =   &H80000008&
+         Height          =   735
+         Left            =   9840
+         MousePointer    =   99  'Custom
+         TabIndex        =   14
+         Top             =   6360
+         Width           =   2775
+         Begin VB.Label lblButton3 
+            Alignment       =   2  'Center
+            AutoSize        =   -1  'True
+            BackStyle       =   0  'Transparent
+            Caption         =   "BUTTON LABEL 3"
             BeginProperty Font 
                Name            =   "MS Sans Serif"
                Size            =   12
@@ -329,11 +395,8 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-
-Dim DB As New OmlDatabase
 Dim strAppDataPath As String
 Dim strAppDataFile As String
-Dim strSQL As String
 Dim MoveStartX As Single
 Dim MoveStartY As Single
 Dim MoveEndX As Single
@@ -349,6 +412,8 @@ Private Sub Form_Load()
     lblTitle.Caption = Me.Caption
     lblUserName.Caption = gstrUserName
     lblButton1.Caption = "ADD USER"
+    lblButton2.Caption = "EDIT USER"
+    lblButton3.Caption = "DELETE USER"
     LoadMousePointer
     SetContainerTitle
     LoadList
@@ -377,59 +442,114 @@ CheckErr:
 End Sub
 
 Private Sub LoadList()
+    Dim DB As New OmlDatabase
+    Dim SB As New OmlSQLBuilder
     Dim rst As ADODB.Recordset
     Dim List As ListItem
     Dim i As Integer
     Dim r As Integer
-    
+On Error GoTo Catch
     strAppDataPath = App.Path & "\Storage\"
     strAppDataFile = "Data.mdb"
-    With DB
-        .DataPath = strAppDataPath
-        .DataFile = strAppDataFile
-        '.DataPassword = ""
-        .OpenMdb
-        If .ErrorDesc <> "" Then
-            MsgBox "Error: " & .ErrorDesc, vbExclamation, "Open Database"
-            Exit Sub
+    DB.DataPath = strAppDataPath
+    DB.DataFile = strAppDataFile
+    'DB.DataPassword = ""
+    DB.OpenMdb
+    If DB.ErrorDesc <> "" Then
+        MsgBox "Error: " & DB.ErrorDesc, vbExclamation, "Open Database"
+        Exit Sub
+    End If
+    'strSQL = "SELECT *"
+    'strSQL = strSQL & " FROM Users"
+    SB.SELECT_ALL "Users"
+    Set rst = DB.OpenRs(SB.Text)
+    If DB.ErrorDesc <> "" Then
+        MsgBox "Error: " & DB.ErrorDesc, vbExclamation, "Query Database"
+        Exit Sub
+    End If
+    ListView1.ListItems.Clear
+    AddColHeader
+    While Not rst.EOF
+        Set List = ListView1.ListItems.Add(, "U" & rst!ID, rst!ID, , 0)
+        List.SubItems(1) = rst!UserID
+        List.SubItems(2) = rst!UserName
+        List.SubItems(3) = rst!UserRole
+        List.SubItems(4) = rst!Active
+        If rst!Active = False Then
+            List.ForeColor = vbRed
+            For r = 1 To List.ListSubItems.Count
+                List.ListSubItems(r).ForeColor = vbRed
+            Next
+        Else
+            List.ForeColor = vbBlack
+            For r = 1 To List.ListSubItems.Count
+                List.ListSubItems(r).ForeColor = vbBlack
+            Next
         End If
-        strSQL = "SELECT *"
-        strSQL = strSQL & " FROM Users"
-        Set rst = .OpenRs(strSQL)
-        If .ErrorDesc <> "" Then
-            MsgBox "Error: " & .ErrorDesc, vbExclamation, "Query Database"
-            Exit Sub
-        End If
-        ListView1.ListItems.Clear
-        AddColHeader
-        While Not rst.EOF
-            Set List = ListView1.ListItems.Add(, "U" & rst!ID, rst!ID, , 0)
-            List.SubItems(1) = rst!UserID
-            List.SubItems(2) = rst!UserName
-            List.SubItems(3) = rst!UserRole
-            List.SubItems(4) = rst!Active
-            If rst!Active = False Then
-                List.ForeColor = vbRed
-                For r = 1 To List.ListSubItems.Count
-                    List.ListSubItems(r).ForeColor = vbRed
-                Next
-            Else
-                List.ForeColor = vbBlack
-                For r = 1 To List.ListSubItems.Count
-                    List.ListSubItems(r).ForeColor = vbBlack
-                Next
-            End If
-            rst.MoveNext
-            i = i + 1
-        Wend
-        .CloseRs rst
-        .CloseMdb
-    End With
+        rst.MoveNext
+        i = i + 1
+    Wend
+    DB.CloseRs rst
+    DB.CloseMdb
+    Exit Sub
+Catch:
+    MsgBox Err.Number & " - " & Err.Description, vbExclamation, "LoadList"
+    DB.CloseRs rst
+    DB.CloseMdb
+End Sub
+
+Private Sub DeleteUser()
+    Dim DB As New OmlDatabase
+    Dim SB As New OmlSQLBuilder
+    Dim rst As ADODB.Recordset
+    Dim strUserID As String
+On Error GoTo Catch
+    If ListView1.ListItems.Count = 0 Then
+        Exit Sub
+    End If
+    strAppDataPath = App.Path & "\Storage\"
+    strAppDataFile = "Data.mdb"
+    DB.DataPath = strAppDataPath
+    DB.DataFile = strAppDataFile
+    'DB.DataPassword = ""
+    DB.OpenMdb
+    If DB.ErrorDesc <> "" Then
+        MsgBox "Error: " & DB.ErrorDesc, vbExclamation, "Open Database"
+        Exit Sub
+    End If
+    strUserID = ListView1.SelectedItem.Text
+    'strSQL = "SELECT *"
+    'strSQL = strSQL & " FROM Users"
+    SB.SELECT_ID "Users"
+    SB.WHERE_Long "ID", CLng(strUserID)
+    Set rst = DB.OpenRs(SB.Text)
+    If DB.ErrorDesc <> "" Then
+        MsgBox "Error: " & DB.ErrorDesc, vbExclamation, "Query Database"
+        Exit Sub
+    End If
+    If Not rst.EOF Then
+        SB.DELETE "Users"
+        SB.WHERE_Long "ID", CLng(strUserID)
+        DB.Execute SB.Text
+        MsgBox "Success: User has been deleted!", vbInformation, "DeleteUser"
+    Else
+        MsgBox "Error: User not found!", vbExclamation, "DeleteUser"
+    End If
+    DB.CloseRs rst
+    DB.CloseMdb
+    Exit Sub
+Catch:
+    MsgBox Err.Number & " - " & Err.Description, vbExclamation, "DeleteUser"
+    DB.CloseRs rst
+    DB.CloseMdb
 End Sub
 
 Private Sub LoadMousePointer()
 On Error Resume Next
+    fraButton1.MouseIcon = LoadPicture(App.Path & "\Resources\Icon\hand.ico")
     fraMenu1.MouseIcon = LoadPicture(App.Path & "\Resources\Icon\hand.ico")
+    fraButton2.MouseIcon = LoadPicture(App.Path & "\Resources\Icon\hand.ico")
+    fraButton3.MouseIcon = LoadPicture(App.Path & "\Resources\Icon\hand.ico")
     'fraMenu2.MouseIcon = LoadPicture(App.Path & "\Resources\Icon\hand.ico")
 End Sub
 
@@ -445,9 +565,31 @@ Private Sub fraButton1_Click()
     Unload Me
 End Sub
 
-Private Sub fraMenu1_Click()
+Private Sub fraButton2_Click()
+On Error GoTo CheckErr
+    If ListView1.ListItems.Count = 0 Then
+        Exit Sub
+    End If
+    With frmUserDetails
+        .Show
+        .PopulateValues ListView1.SelectedItem.Text
+    End With
     Unload Me
+    Exit Sub
+CheckErr:
+    MsgBox Err.Number & " - " & Err.Description, vbExclamation, "fraButton2_Click"
+End Sub
+
+Private Sub fraButton3_Click()
+    If vbYes = MsgBox("Are you sure to delete?", vbQuestion + vbYesNo, "Delete User") Then
+        DeleteUser
+        LoadList
+    End If
+End Sub
+
+Private Sub fraMenu1_Click()
     frmDashboard.Show
+    Unload Me
 End Sub
 
 Private Sub fraMenuContainer_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
@@ -469,6 +611,19 @@ End Sub
 
 Private Sub lblButton1_Click()
     fraButton1_Click
+End Sub
+
+Private Sub lblButton2_Click()
+    fraButton2_Click
+End Sub
+
+Private Sub lblButton3_Click()
+    fraButton3_Click
+End Sub
+
+Private Sub lblMenu1_Click()
+    frmDashboard.Show
+    Unload Me
 End Sub
 
 Private Sub lblTitle_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
