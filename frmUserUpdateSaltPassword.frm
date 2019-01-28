@@ -394,7 +394,7 @@ Private Sub lblX_Click()
     Unload Me
 End Sub
 
-Private Sub LoadCombo()
+Public Sub LoadCombo()
     Dim DB As New OmlDatabase
     Dim SB As New OmlSQLBuilder
     Dim rst As ADODB.Recordset
@@ -417,7 +417,7 @@ On Error GoTo Catch
     ''strSQL = strSQL & " WHERE Active = Yes"
     SB.SELECT_ "UserID"
     SB.FROM "Users"
-    SB.WHERE_Boolean "Active", True
+    'SB.WHERE_Boolean "Active", True
     Set rst = DB.OpenRs(SB.Text)
     If DB.ErrorDesc <> "" Then
         MsgBox "Error: " & DB.ErrorDesc, vbExclamation, "Query Database"
