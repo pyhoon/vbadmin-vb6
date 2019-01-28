@@ -445,6 +445,7 @@ Private Sub fraButton2_Click()
     End If
     With frmUserUpdateSaltPassword
         .Show
+        .LoadCombo
         .cboUserID.Text = txtUserID.Text
     End With
     Unload Me
