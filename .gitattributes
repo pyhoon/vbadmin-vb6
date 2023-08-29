@@ -1,0 +1,4 @@
+*.frm linguist-language=vb6
+*.bas linguist-language=vb6
+*.vbp linguist-language=vb6
+*.vbp linguist-detectable=true
